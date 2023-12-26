@@ -117,7 +117,7 @@ def tasks_view(request, id):
         course = Course.objects.get(id=id)
 
         if request.method == 'GET':
-             tasks = Task.objects.all()
+             tasks = Task.objects.filter(course=course)
              return Response(OneTaskSerializer(tasks, many=True).data, 
                         status = HTTP_200_OK)
 

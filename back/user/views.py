@@ -6,10 +6,9 @@ from rest_framework.status import (HTTP_200_OK,
                                    HTTP_400_BAD_REQUEST,
                                    HTTP_201_CREATED,
                                    HTTP_404_NOT_FOUND,
-                                   HTTP_500_INTERNAL_SERVER_ERROR,
+                                   HTTP_500_INTERNAL_SERVER_ERROR
                                    )
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from django.contrib.auth.hashers import make_password
@@ -30,7 +29,7 @@ def sign_up_view(request):
    password_confirmation = request.data['password_confirmation']
       
    if password_confirmation != password:
-      return Response({'message': 'Password1 does not match password'},
+      return Response({'message': 'Passwords does not match password'},
                        status=HTTP_400_BAD_REQUEST)
    
    if User.objects.filter(username=username) or User.objects.filter(email=email):
@@ -60,8 +59,6 @@ def sign_in_view(request):
    user  = authenticate(email, password)
    
    if user is not None:
-      login(request, user)
-      
       refresh = RefreshToken.for_user(user)
       
       refresh_token = str(refresh)
@@ -77,24 +74,18 @@ def sign_in_view(request):
    
    
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def sign_out_view(request):
    authorization_header = request.headers.get('Authorization')
 
    if authorization_header and authorization_header.startswith('Bearer '):
-      access_token = authorization_header.split(' ')[1]
-   
-      try:
-         decoded_token = RefreshToken(access_token, verify=False)
-         user = decoded_token.payload.get('user_id')
-
-         # Revoke the token
-         token = RefreshToken(access_token)
-         token.blacklist()
-         
-         return Response({'message': 'Logout successful'}, 
-                   status=HTTP_200_OK)
-      except:
-         return Response({'message': 'Token incorrect'}, 
+        access_token = authorization_header.split(' ')[1]
+  
+        if access_token:
+            return Response({'message': 'Logout successful'}, 
+                    status=HTTP_200_OK)
+        else:
+            return Response({'message': 'Token incorrect'}, 
                        status=HTTP_403_FORBIDDEN)  
    else:
        return Response({'message': 'Token not found'}, 

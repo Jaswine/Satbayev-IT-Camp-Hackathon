@@ -16,6 +16,10 @@ class Course(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name = "Курс"
+        verbose_name_plural = "Курс"
+
     def __str__(self) -> str:
         return self.title
     
@@ -32,6 +36,10 @@ class Task(models.Model):
 
     video = models.FileField(upload_to='courses/tasks/videos', blank=True)
     text = models.TextField(default="", blank=True)
+
+    class Meta:
+        verbose_name = "Задания"
+        verbose_name_plural = "Задания"
 
     @classmethod    
     def video_task(cls, video):
