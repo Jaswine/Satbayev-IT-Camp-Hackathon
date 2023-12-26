@@ -7,6 +7,7 @@ import Navigation from '../../../components/Navigation/Navigation'
 const ShowOneCourse = () => {
     const [course, setCourse] = useState('')
     const [tasks, setTasks] = useState('')
+    const [courseRegistrationStatus, setCourseRegistrationStatus] = useState('')
     const {id} = useParams()
 
     useEffect(() => {
@@ -18,7 +19,8 @@ const ShowOneCourse = () => {
         $axios(`/courses/${id}`)
             .then(res => {
                 console.log(res.data)
-                setCourse(res.data)
+                setCourse(res.data.course)
+                setCourseRegistrationStatus(res.data.course_status)
             })
     }
 
@@ -28,6 +30,24 @@ const ShowOneCourse = () => {
                 console.log(res.data)
                 setTasks(res.data)
             })
+    }
+
+    const registerToCourse = () => {
+        $axios.post(`/courses/${id}/course-write`)
+        .then(res => {
+            console.log(res.data)
+            getTasks()
+            getCourse()
+        })
+    }
+
+    const containerButtonStyles = {
+        backgroundColor: courseRegistrationStatus == 'Зарегистрирован' ? 'white' : '',
+        color: courseRegistrationStatus == 'Зарегистрирован' ? '#564070' : '',
+    }
+
+    const containerTasksStyles = {
+        opacity: courseRegistrationStatus == 'Зарегистрирован' ? 1 : .4,
     }
     
 
@@ -46,23 +66,29 @@ const ShowOneCourse = () => {
                         <p>
                         {course.description}
                         </p>
+                        <button 
+                            onClick={registerToCourse}
+                            style={containerButtonStyles}
+                        >
+                            {courseRegistrationStatus}
+                        </button>
                     </div> 
              </div>
             ): ""}
             <h3>Tasks:</h3>
-            <div className={styles.tasks}>
+            <div 
+                className={styles.tasks}
+                style={containerTasksStyles}
+                >
                 {tasks.length != 0 ? (
                     <div>
                         {tasks.map(task => 
                             <div className={styles.task} key={task.id}>
                                 <div className="">
                                     <span className={styles.task__complete}></span>
-                                    <Link to={`/courses/${course.id}/task/${task.id}`}>{task.title}</Link>
+                                    <Link to={courseRegistrationStatus == 'Зарегистрирован' ? `/courses/${course.id}/tasks/${task.id}`: ""}>{task.title}</Link>
                                 </div>
-                                <div className="">
-                                    <Link to={`/courses/${course.id}/task/${task.id}`}></Link>
-                                </div>
-                                <Link to={`/courses/${course.id}/task/${task.id}`} className={styles.task__go}></Link>
+                                <Link to={courseRegistrationStatus == 'Зарегистрирован' ? `/courses/${course.id}/tasks/${task.id}` : ""} className={styles.task__go}></Link>
                             </div>    
                         )}
                     </div>

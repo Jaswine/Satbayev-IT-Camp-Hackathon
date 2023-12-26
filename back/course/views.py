@@ -70,8 +70,29 @@ def one_course_view(request, id):
         if request.method == 'GET':
             course = Course.objects.get(id=id)
 
-            return Response(CourseSerializer(course, many=False).data, 
-                         status = HTTP_200_OK)
+            authorization_header = request.headers.get('Authorization')
+
+            if authorization_header and authorization_header.startswith('Bearer '):
+                access_token = authorization_header.split(' ')[1]
+            
+                # try:
+                decoded_token = RefreshToken(access_token, verify=False)
+                user_id = decoded_token.payload.get('user_id')
+
+                user = User.objects.get(id=user_id)
+
+                if course.users_who_registered.filter(id=user.id):
+                    status = 'Зарегистрирован'
+                else:
+                    status = 'Зарегистрироваться'
+
+                return Response({
+                    "course_status": status,
+                    'course': CourseSerializer(course, many=False).data
+                }, status = HTTP_200_OK)
+            
+            return Response({'message': 'Token not found'}, 
+                                status=HTTP_401_UNAUTHORIZED)   
 
         elif request.method == 'PUT':
             authorization_header = request.headers.get('Authorization')
@@ -226,3 +247,38 @@ def one_task_view(request, id, task_id):
          'detail': 'Not found'
          }, status=HTTP_404_NOT_FOUND)
     
+# SHOW / CREATE Course
+@api_view(['GET', 'POST'])
+def course_write_on(request, id):
+    if request.method == 'POST':
+        try:
+            course = Course.objects.get(id=id)
+
+            authorization_header = request.headers.get('Authorization')
+
+            if authorization_header and authorization_header.startswith('Bearer '):
+                access_token = authorization_header.split(' ')[1]
+            
+                # try:
+                decoded_token = RefreshToken(access_token, verify=False)
+                user_id = decoded_token.payload.get('user_id')
+
+                user = User.objects.get(id=user_id)
+        
+                if course.users_who_registered.filter(id=user.id):
+                    course.users_who_registered.remove(user)
+
+                    return Response({
+                        'message': 'You unregistered successfully!'
+                        }, status=HTTP_200_OK)
+                else:
+                    course.users_who_registered.add(user)
+
+                    return Response({
+                        'message': 'You registered successfully!'
+                        }, status=HTTP_200_OK)
+
+        except:
+            return Response({
+                'detail': 'Not found'
+                }, status=HTTP_404_NOT_FOUND)

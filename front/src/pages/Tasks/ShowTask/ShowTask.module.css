@@ -1,0 +1,50 @@
+body {
+	overflow-y: auto;
+}
+.container{
+	position: relative;
+	width: 100%;
+	overflow-y: scroll;
+	margin-bottom: 20vh;
+
+}
+
+.main{
+	position: relative;
+	width: 76vw;
+	left: 20vw;
+	min-height: 100vh;
+	background: var(--white);
+	transition: 0.5s;
+	padding: 0 2vw;
+	overflow-y: scroll;
+
+}
+.main.active{
+    width: 80vw;
+    left: 80px;
+ }
+ .task {
+    margin-top: 5vh;
+ }
+ .task h2 {
+    margin-bottom: 20px;
+ }
+ .task h1 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+ }
+ .task p span {
+    background-color: rgb(152, 109, 143, .3);
+    padding: 6px 10px;
+    margin-right: 10px;
+    border-radius: 10px;
+ }
+ .task__text {
+    margin-top: 20px;
+ }
+ .task__video {
+    border-radius: 20px;
+    margin-top: 20px;
+    width: 100%; 
+ }

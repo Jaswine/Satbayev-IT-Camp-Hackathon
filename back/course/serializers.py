@@ -17,11 +17,13 @@ class CourseSerializer(ModelSerializer):
       fields = ('id', 'title', 'user', 'image', 'description', 'public', 'created', 'tasks')
 
 class CourseTaskSerializer(ModelSerializer):
+   user =  UserSerializer(many=False)
    class Meta:
       model = Course
-      fields = ('id', 'title', )
+      fields = ('id', 'title', 'user')
 
 class OneTaskSerializer(ModelSerializer):
+   course = CourseTaskSerializer(many=False)
    class Meta:
       model = Task
       fields = '__all__'

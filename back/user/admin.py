@@ -1,3 +1,5 @@
 from django.contrib import admin
-from .views import Profile
+from .models import Subject, SubjectRaiting
 
+admin.site.register(Subject)
+admin.site.register(SubjectRaiting)

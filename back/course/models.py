@@ -36,6 +36,7 @@ class Task(models.Model):
 
     video = models.FileField(upload_to='courses/tasks/videos', blank=True)
     text = models.TextField(default="", blank=True)
+    users = models.ManyToManyField(User, blank=True, default=[])
 
     class Meta:
         verbose_name = "Задания"
@@ -58,3 +59,10 @@ class Task(models.Model):
     def __str__(self) -> str:
         return self.title
     
+class UserCourseProgress(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+    points = models.IntegerField(default=0)
+
+    def __str__(self) -> str:
+        return self.course.title

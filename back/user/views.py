@@ -141,3 +141,4 @@ def show_profile_view(request, username):
     except Exception as e:
         # Handle other exceptions as needed
         return Response({'detail': str(e)}, status=HTTP_500_INTERNAL_SERVER_ERROR)
+
