@@ -5,6 +5,7 @@ import { $axios } from '../../../api'
 import Navigation from '../../../components/Navigation/Navigation'
 
 const ShowOneCourse = () => {
+    const [currentUser, setCurrentUser] = useState('')
     const [course, setCourse] = useState('')
     const [tasks, setTasks] = useState('')
     const [courseRegistrationStatus, setCourseRegistrationStatus] = useState('')
@@ -21,13 +22,20 @@ const ShowOneCourse = () => {
                 console.log(res.data)
                 setCourse(res.data.course)
                 setCourseRegistrationStatus(res.data.course_status)
+                setCurrentUser(res.data.user)
             })
     }
 
     const getTasks = () => {
         $axios(`/courses/${id}/tasks`)
             .then(res => {
-                console.log(res.data)
+                // const updatedTasks = res.data.map(task => {
+                //     const status = currentUser.username in task.users ? 'completed' : 'unCompleted';
+                //     return { data: task, status };
+                //   });
+            
+                //   setTasks(updatedTasks);
+                //   console.log(tasks)
                 setTasks(res.data)
             })
     }

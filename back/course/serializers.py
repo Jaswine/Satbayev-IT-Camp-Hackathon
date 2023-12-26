@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
-from .models import Course, Task
+from .models import Course, Task, UserCourseProgress
 from user.serializers import UserSerializer
 
 class TaskSerializer(ModelSerializer):
@@ -23,7 +23,16 @@ class CourseTaskSerializer(ModelSerializer):
       fields = ('id', 'title', 'user')
 
 class OneTaskSerializer(ModelSerializer):
+   users = UserSerializer(many=True, read_only=True)
    course = CourseTaskSerializer(many=False)
    class Meta:
       model = Task
       fields = '__all__'
+   
+class UserCourseProgressSerializer(ModelSerializer):
+   user = UserSerializer(many=False)
+   course = CourseTaskSerializer(many=False)
+
+   class Meta:
+      model = UserCourseProgress
+      fields = ('user', 'course', 'points')

@@ -14,8 +14,9 @@ from django.contrib.auth.models import User
 
 from .serializers import CourseSerializer, OneTaskSerializer
 
-from .models import Course, Task
-from .serializers import CourseSerializer
+from .models import Course, Task, UserCourseProgress
+from user.models import Profile
+from .serializers import CourseSerializer, UserSerializer, UserCourseProgressSerializer
 
 
 # SHOW / CREATE Course
@@ -87,6 +88,7 @@ def one_course_view(request, id):
                     status = 'Зарегистрироваться'
 
                 return Response({
+                    "user": UserSerializer(user, many=False).data,
                     "course_status": status,
                     'course': CourseSerializer(course, many=False).data
                 }, status = HTTP_200_OK)
@@ -247,8 +249,8 @@ def one_task_view(request, id, task_id):
          'detail': 'Not found'
          }, status=HTTP_404_NOT_FOUND)
     
-# SHOW / CREATE Course
-@api_view(['GET', 'POST'])
+# 
+@api_view(['POST'])
 def course_write_on(request, id):
     if request.method == 'POST':
         try:
@@ -274,10 +276,90 @@ def course_write_on(request, id):
                 else:
                     course.users_who_registered.add(user)
 
+                    if UserCourseProgress.objects.filter(course=course, user=user) is None:
+                        UserCourseProgress.create(course=course, user=user, points=0)
+
                     return Response({
                         'message': 'You registered successfully!'
                         }, status=HTTP_200_OK)
 
+        except:
+            return Response({
+                'detail': 'Not found'
+                }, status=HTTP_404_NOT_FOUND)
+        
+
+@api_view(['POST'])
+def task_complete(request, id, task_id):
+    if request.method == 'POST':
+        try:
+            course = Course.objects.get(id=id)
+            task = Task.objects.get(id=task_id)
+
+            authorization_header = request.headers.get('Authorization')
+
+            if authorization_header and authorization_header.startswith('Bearer '):
+                access_token = authorization_header.split(' ')[1]
+            
+                decoded_token = RefreshToken(access_token, verify=False)
+                user_id = decoded_token.payload.get('user_id')
+
+                user = User.objects.get(id=user_id)
+
+                if task.users.filter(id=user.id):
+                    return Response({
+                        'message': 'You got experience with this task'
+                    }, status=HTTP_200_OK)
+                else:
+                    task.users.add(user)
+
+                    if course.users_who_registered.filter(id=user.id):
+                        profile = Profile.objects.get(user=user)
+
+                        profile.points += task.points
+                        profile.save()
+
+                        ucp = UserCourseProgress.objects.filter(course=course, user=user).first()
+                        
+                        if ucp:
+                            ucp.points += task.points
+
+                        ucp.save()
+
+                        return Response({
+                        'message': 'Progress updated successfully!'
+                        }, status=HTTP_200_OK)
+            else:
+                    return Response({
+                    'message': ' You need to register'
+                    }, status=HTTP_400_BAD_REQUEST)
+        except:
+            return Response({
+                'detail': 'Not found'
+                }, status=HTTP_404_NOT_FOUND)
+        
+@api_view(['POST'])
+def diary(request):
+    if request.method == 'POST':
+        try:
+            authorization_header = request.headers.get('Authorization')
+
+            if authorization_header and authorization_header.startswith('Bearer '):
+                access_token = authorization_header.split(' ')[1]
+            
+                decoded_token = RefreshToken(access_token, verify=False)
+                user_id = decoded_token.payload.get('user_id')
+
+                user = User.objects.get(id=user_id)
+
+                ucps = UserCourseProgress.objects.filter(user=user)
+
+                return Response(UserCourseProgressSerializer(ucps, many=True).data, 
+                                status=HTTP_200_OK)
+            else:
+                    return Response({
+                    'message': ' You need to register'
+                    }, status=HTTP_400_BAD_REQUEST)
         except:
             return Response({
                 'detail': 'Not found'

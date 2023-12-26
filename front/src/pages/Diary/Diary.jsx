@@ -2,6 +2,8 @@ import Navigation from '../../components/Navigation/Navigation'
 import styles from './Diary.module.css'
 
 const Diary = () => {
+	
+
   return (
 	<div className={styles.container}>
 		<Navigation/>

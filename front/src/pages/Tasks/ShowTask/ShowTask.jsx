@@ -10,6 +10,7 @@ const ShowTask = () => {
 
     useEffect(() => {
         getTask()
+        CompleteTask()
     }, [])
 
     const getTask = () =>{
@@ -19,6 +20,13 @@ const ShowTask = () => {
                 setTask(res.data)
             })
     }
+
+    const CompleteTask = () =>{
+      $axios.post(`/courses/${id}/tasks/${task_id}/task-complete`)
+          .then(res => {
+              console.log(res.data)
+          })
+  }
 
   return (
     <div className={styles.container}>
