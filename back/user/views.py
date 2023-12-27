@@ -49,6 +49,7 @@ def sign_up_view(request):
    return Response({
       'refresh_token': refresh_token,
       'access_token': token,
+      'user': UserSerializer(user, many=False).data,
       }, status=HTTP_201_CREATED)
 
 
@@ -66,7 +67,8 @@ def sign_in_view(request):
    
       return Response({
          'refresh_token': refresh_token,
-         'access_token': access_token
+         'access_token': access_token,
+        'user': UserSerializer(user, many=False).data,
          }, status=HTTP_200_OK)
    else:
       return Response({'message': 'user not found'}, 

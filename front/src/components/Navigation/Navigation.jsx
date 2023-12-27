@@ -2,10 +2,13 @@ import React from 'react'
 import styles from './Navigation.module.css'
 import { Link, useNavigate } from 'react-router-dom'
 import { $axios } from '../../api'
+import { useAuth } from '../../hooks/useAuth';
 
 
 const Navigation = () => {
     const navigate = useNavigate()
+    const { userUsername } = useAuth()
+
 
     const logout = () => {
         $axios.post('/auth/sign-out')
@@ -37,7 +40,7 @@ const Navigation = () => {
             </li>
 
             <li>
-                <Link to="/profile">
+                <Link to={`/profile/${userUsername}`}>
                 <span className={styles.icon}><ion-icon name="person-circle-outline"></ion-icon></span>
                     <span className={styles.title}>Профиль</span>
                 </Link>

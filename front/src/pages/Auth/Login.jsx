@@ -8,11 +8,11 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate('')
-    const {setIsAuth} = useAuth()
+    const {setIsAuth, setUserUsername} = useAuth()
     const [error, setError] = useState('')
 
     useEffect(() => {
-      document.title = 'Вход'
+      // document.title = 'Вход'
     }, [])
 
     const Auth = (e) => {
@@ -27,6 +27,9 @@ const Login = () => {
 
         setIsAuth(true)
         localStorage.setItem('token', res.data.access_token)
+
+        setUserUsername(res.data.user.username)
+        localStorage.setItem('username', res.data.user.username)
 
         navigate('/')
       }) 

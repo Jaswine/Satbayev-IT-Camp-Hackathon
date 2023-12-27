@@ -40,7 +40,7 @@ const ShowTask = () => {
               </h2>
               <div className={styles.task__info}>
                   <h1>{ task.title }</h1>
-                  <p><span>#{task.type} </span> <span>#{task.course.user.username}</span> <span># {task.points} points</span></p>
+                  <p><span>{task.type} </span> <span>{task.course.user.username}</span> <span>{task.points} points</span></p>
               </div>
               {task.type == 'TaskText' ? (
                 <div className={styles.task__text}>{ task.text }</div>

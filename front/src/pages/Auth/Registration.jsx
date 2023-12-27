@@ -11,7 +11,7 @@ const Registration = () => {
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
 
     const navigate = useNavigate('')
-    const {setIsAuth} = useAuth()
+    const {setIsAuth, setUserUsername} = useAuth()
     const [error, setError] = useState('')
 
     useEffect(() => {
@@ -32,6 +32,9 @@ const Registration = () => {
 
         setIsAuth(true)
         localStorage.setItem('token', res.data.access_token)
+
+        setUserUsername(res.data.user.username)
+        localStorage.setItem('username', res.data.user.username)
 
         navigate('/')
       }) 

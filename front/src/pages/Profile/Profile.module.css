@@ -1,0 +1,133 @@
+body {
+	overflow-y: auto;
+}
+.container{
+	position: relative;
+	width: 100%;
+	overflow-y: scroll;
+	/* margin-bottom: 20vh; */
+
+}
+
+.main{
+	position: relative;
+	width: 76vw;
+	left: 20vw;
+	min-height: 100vh;
+	background: var(--white);
+	transition: 0.5s;
+	padding: 0 2vw;
+	overflow-y: scroll;
+
+}
+.profile__information {
+    width: 100%
+}
+.profile__information__main {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 35% 60%;
+    justify-content: space-between;
+    align-items: center;
+    margin: 50px 0 10px;
+    gap: 5%;
+}
+.profile__information__main__left {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.profile__information__main__right {
+    width: 100%;
+}
+.profile__information__main__left  img {
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+.profile__information__main__right h1 {
+    font-size: 38px;
+}
+
+
+.info {
+	display: flex;
+	justify-content: space-between;
+	align-items: start;
+	position: relative;
+	width: 100%;
+	padding: 50px 20px;
+	padding-top: 10px;
+	/* display: grid;
+	grid-template-columns: repeat(4, 1fr); */
+
+	grid-gap: 30px;
+}
+.details {
+	position: relative;
+	width: 100%;
+	padding: 20px;
+	/* display: grid; */
+	/* grid-template-columns: 2fr 1fr; */
+	grid-gap: 30px;
+	margin-top: 10px;
+}
+.details .recentOrders{
+	position: relative;
+	display: grid;
+	background: var(--white);
+	padding: 20px;
+	box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+	border-radius: 20px;
+}
+.details .cardHeader{
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+.cardHeader h2{
+	font-weight: 600;
+	color: var(--violet);
+	font-size: 28px;
+}
+.cardHeader .btn{
+	position: relative;
+	padding: 5px 10px;
+	background: var(--violet);
+	text-decoration: none;
+	color: var(--white);
+	border-radius: 6px;
+}
+.details table{
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 10px;
+}
+.details table thead td{
+	font-weight: 600;
+}
+.details .recentOrders table tr{
+	color: var(--black1);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.details .recentOrders table tr:last-child{
+	border-bottom: none;
+}
+.details .recentOrders table tbody tr:hover{
+	background: var(--violet);
+	color: var(--white);
+}
+.details .recentOrders table tr td{
+	padding: 10px;
+}
+.details .recentOrders table tr td:last-child{
+	text-align: end;
+}
+.details .recentOrders table tr td:nth-child(2){
+	text-align: end;
+}
+.details .recentOrders table tr td:nth-child(3){
+	text-align: center;
+}

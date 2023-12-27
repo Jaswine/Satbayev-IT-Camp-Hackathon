@@ -23,7 +23,7 @@ class CourseTaskSerializer(ModelSerializer):
       fields = ('id', 'title', 'user')
 
 class OneTaskSerializer(ModelSerializer):
-   users = UserSerializer(many=True, read_only=True)
+   # users = UserSerializer(many=True, read_only=True)
    course = CourseTaskSerializer(many=False)
    class Meta:
       model = Task

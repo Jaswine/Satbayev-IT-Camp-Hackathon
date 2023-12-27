@@ -7,6 +7,9 @@ import ShowAllCourses from './pages/Courses/ShowAllCourses/ShowAllCourses'
 import Diary from './pages/Diary/Diary'
 import ShowOneCourse from './pages/Courses/ShowOneCourse/ShowOneCourse'
 import ShowTask from './pages/Tasks/ShowTask/ShowTask'
+import Profile from './pages/Profile/Profile'
+import NotFound from './pages/NotFound/NotFound'
+import Chat from './pages/Chat/Chat'
 
 const App = () => {
   return (
@@ -20,6 +23,11 @@ const App = () => {
         <Route path='/courses/:id/tasks/:task_id' element={<ShowTask/>} />
         
         <Route path='/diary' element={<Diary/>} />
+        <Route path='/chats' element={<Chat/>} />
+
+        <Route path='*' element={<NotFound/>} />
+
+        <Route path='/profile/:username' element={<Profile/>} />
 
     </Routes>
   )

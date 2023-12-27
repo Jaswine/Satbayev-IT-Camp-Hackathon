@@ -276,12 +276,14 @@ def course_write_on(request, id):
                 else:
                     course.users_who_registered.add(user)
 
-                    if UserCourseProgress.objects.filter(course=course, user=user) is None:
-                        UserCourseProgress.create(course=course, user=user, points=0)
+                if UserCourseProgress.objects.filter(course=course, user=user):
+                    print("...")
+                else:
+                    UserCourseProgress.objects.create(course=course, user=user, points=0)
 
-                    return Response({
-                        'message': 'You registered successfully!'
-                        }, status=HTTP_200_OK)
+                return Response({
+                    'message': 'You registered successfully!'
+                    }, status=HTTP_200_OK)
 
         except:
             return Response({
@@ -292,7 +294,7 @@ def course_write_on(request, id):
 @api_view(['POST'])
 def task_complete(request, id, task_id):
     if request.method == 'POST':
-        try:
+        # try:
             course = Course.objects.get(id=id)
             task = Task.objects.get(id=task_id)
 
@@ -306,16 +308,15 @@ def task_complete(request, id, task_id):
 
                 user = User.objects.get(id=user_id)
 
-                if task.users.filter(id=user.id):
-                    return Response({
-                        'message': 'You got experience with this task'
-                    }, status=HTTP_200_OK)
-                else:
-                    task.users.add(user)
+                if course.users_who_registered.filter(id=user.id):
+                    if task.users.filter(id=user.id):
+                        return Response({
+                            'message': 'You got experience with this task'
+                        }, status=HTTP_200_OK)
+                    else:
+                        task.users.add(user)
 
-                    if course.users_who_registered.filter(id=user.id):
                         profile = Profile.objects.get(user=user)
-
                         profile.points += task.points
                         profile.save()
 
@@ -329,18 +330,23 @@ def task_complete(request, id, task_id):
                         return Response({
                         'message': 'Progress updated successfully!'
                         }, status=HTTP_200_OK)
+                    
+                else:
+                    return Response({
+                    'message': ' You need to register'
+                    }, status=HTTP_400_BAD_REQUEST)
             else:
                     return Response({
                     'message': ' You need to register'
                     }, status=HTTP_400_BAD_REQUEST)
-        except:
-            return Response({
-                'detail': 'Not found'
-                }, status=HTTP_404_NOT_FOUND)
+        # except:
+        #     return Response({
+        #         'detail': 'Not found'
+        #         }, status=HTTP_404_NOT_FOUND)
         
-@api_view(['POST'])
+@api_view(['GET'])
 def diary(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         try:
             authorization_header = request.headers.get('Authorization')
 
@@ -357,6 +363,7 @@ def diary(request):
                 return Response(UserCourseProgressSerializer(ucps, many=True).data, 
                                 status=HTTP_200_OK)
             else:
+                    
                     return Response({
                     'message': ' You need to register'
                     }, status=HTTP_400_BAD_REQUEST)
@@ -364,3 +371,4 @@ def diary(request):
             return Response({
                 'detail': 'Not found'
                 }, status=HTTP_404_NOT_FOUND)
+        
